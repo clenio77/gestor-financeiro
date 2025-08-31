@@ -44,6 +44,7 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
     { name: 'Contas', href: '/accounts', icon: PiggyBank },
     { name: 'Orçamentos', href: '/budgets', icon: PiggyBank },
     { name: 'Metas', href: '/goals', icon: Target },
+    { name: 'IA & Análises', href: '/analytics', icon: Target },
     { name: 'OCR Upload', href: '/ocr', icon: Camera },
     { name: 'Análise PDF', href: '/pdf-analysis', icon: FileText },
     { name: 'Configurações', href: '/settings', icon: Settings },

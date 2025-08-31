@@ -19,6 +19,7 @@ const navigationItems: NavigationItem[] = [
   { href: '/accounts', label: 'Contas', icon: '🏦' },
   { href: '/budgets', label: 'Orçamentos', icon: '📈' },
   { href: '/goals', label: 'Metas', icon: '🎯' },
+  { href: '/analytics', label: 'IA & Análises', icon: '🧠' },
   { href: '/settings', label: 'Configurações', icon: '⚙️' }
 ]
 
