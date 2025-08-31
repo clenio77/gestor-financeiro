@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-
-// Disable SSR for this page to avoid theme provider issues
-export const dynamic = 'force-dynamic'
 import AuthLayout from '@/components/AuthLayout'
+import ClientOnly from '@/components/ClientOnly'
 import { ThemeToggle, AccessibilityControls, useTheme } from '@/components/ThemeProvider'
 import { notificationManager, AlertRule } from '@/lib/notifications'
 import { useGoalAlerts } from '@/hooks/useFinancialData'
+
+// Disable SSG for this page to avoid theme provider issues
+export const dynamic = 'force-dynamic'
 import { 
   Bell, 
   Moon, 
@@ -26,16 +27,25 @@ import {
 } from 'lucide-react'
 
 export default function SettingsPage() {
-  const [mounted, setMounted] = useState(false)
+  return (
+    <AuthLayout title="Configurações">
+      <ClientOnly fallback={
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      }>
+        <SettingsContent />
+      </ClientOnly>
+    </AuthLayout>
+  )
+}
+
+function SettingsContent() {
   const { theme, isDark, reduceMotion, highContrast } = useTheme()
   const { alerts, unreadCount } = useGoalAlerts()
   const [alertRules, setAlertRules] = useState<AlertRule[]>([])
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>('default')
   const [testNotificationSent, setTestNotificationSent] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   useEffect(() => {
     // Load alert rules
@@ -86,19 +96,8 @@ export default function SettingsPage() {
 
   const permissionStatus = getPermissionStatus()
 
-  if (!mounted) {
-    return (
-      <AuthLayout title="Configurações">
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        </div>
-      </AuthLayout>
-    )
-  }
-
   return (
-    <AuthLayout title="Configurações">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex items-center space-x-3">
           <SettingsIcon className="h-8 w-8 text-blue-600" />
@@ -211,7 +210,7 @@ export default function SettingsPage() {
             <div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Regras de Alerta</h3>
               <div className="space-y-4">
-                {alertRules.map((rule) => (
+                {alertRules.map((rule: AlertRule) => (
                   <div key={rule.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div>
@@ -296,7 +295,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-3">
-              {alerts.slice(0, 5).map((alert) => (
+              {alerts.slice(0, 5).map((alert: any) => (
                 <div
                   key={alert.id}
                   className={`p-4 rounded-lg border ${
@@ -336,6 +335,5 @@ export default function SettingsPage() {
           </button>
         </div>
       </div>
-    </AuthLayout>
   )
 }
