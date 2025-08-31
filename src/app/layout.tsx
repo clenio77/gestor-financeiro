@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/hooks/useAuth";
 import { Toaster } from "@/components/ui/toaster";
 import { PWAProvider } from "@/components/PWAProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -106,12 +107,14 @@ export default function RootLayout({
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <AuthProvider>
-          <PWAProvider>
-            {children}
-            <Toaster />
-          </PWAProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <PWAProvider>
+              {children}
+              <Toaster />
+            </PWAProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

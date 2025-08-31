@@ -20,6 +20,7 @@ import {
   Download,
   Target
 } from 'lucide-react'
+import { ThemeToggle } from '@/components/ThemeProvider'
 import { useState } from 'react'
 
 interface AuthLayoutProps {
@@ -42,6 +43,7 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
     { name: 'Metas', href: '/goals', icon: Target },
     { name: 'OCR Upload', href: '/ocr', icon: Camera },
     { name: 'Análise PDF', href: '/pdf-analysis', icon: FileText },
+    { name: 'Configurações', href: '/settings', icon: Settings },
   ]
 
   if (loading) {
@@ -53,11 +55,11 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       {/* Mobile sidebar */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
-        <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
+        <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white dark:bg-gray-800 shadow-xl">
           <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
@@ -135,12 +137,16 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
             {isInstallable && (
               <button
                 onClick={installApp}
-                className="flex items-center w-full px-3 py-2 mb-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                className="flex items-center w-full px-3 py-2 mb-2 text-sm font-medium text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
               >
                 <Download className="h-5 w-5 mr-3" />
                 Instalar App
               </button>
             )}
+
+            <div className="mb-2">
+              <ThemeToggle className="w-full justify-start text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800" />
+            </div>
             <button
               onClick={logout}
               className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors"
