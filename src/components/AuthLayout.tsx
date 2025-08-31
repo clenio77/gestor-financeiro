@@ -1,11 +1,13 @@
 "use client"
 
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useRequireAuth } from '@/hooks/useAuth'
 import { usePWAContext } from '@/components/PWAProvider'
+import { MobileNavigation, BottomNavigation, MobileMenuButton } from './MobileNavigation'
+import { useIsMobile } from '@/hooks/useDevice'
 import {
   LayoutDashboard,
   CreditCard,
@@ -21,7 +23,6 @@ import {
   Target
 } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeProvider'
-import { useState } from 'react'
 
 interface AuthLayoutProps {
   children: ReactNode
@@ -33,7 +34,9 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
   const { loading } = useRequireAuth()
   const { isInstallable, installApp } = usePWAContext()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
   const pathname = usePathname()
+  const isMobile = useIsMobile()
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -56,7 +59,14 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-      {/* Mobile sidebar */}
+      {/* Mobile Navigation */}
+      <MobileNavigation
+        isOpen={mobileDrawerOpen}
+        onClose={() => setMobileDrawerOpen(false)}
+        onToggle={() => setMobileDrawerOpen(!mobileDrawerOpen)}
+      />
+
+      {/* Desktop sidebar - hidden on mobile */}
       <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white dark:bg-gray-800 shadow-xl">
@@ -161,12 +171,18 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
       {/* Main content */}
       <div className="lg:pl-64">
         {/* Top bar */}
-        <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
+        <div className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
             <div className="flex items-center">
+              {/* Mobile menu button */}
+              <MobileMenuButton
+                onClick={() => setMobileDrawerOpen(!mobileDrawerOpen)}
+                isOpen={mobileDrawerOpen}
+              />
+              {/* Desktop sidebar toggle - hidden on mobile */}
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden text-gray-400 hover:text-gray-600"
+                className="hidden lg:block text-gray-400 hover:text-gray-600"
               >
                 <Menu className="h-6 w-6" />
               </button>
@@ -190,10 +206,13 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
         </div>
 
         {/* Page content */}
-        <main className="p-4 sm:p-6 lg:p-8">
+        <main className={`p-4 sm:p-6 lg:p-8 ${isMobile ? 'pb-20' : ''}`}>
           {children}
         </main>
       </div>
+
+      {/* Bottom Navigation for mobile */}
+      <BottomNavigation />
     </div>
   )
 }
