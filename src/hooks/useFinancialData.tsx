@@ -2,14 +2,20 @@
 
 import useSWR from 'swr'
 import { apiClient } from '@/lib/api'
-import { 
-  Account, 
-  Transaction, 
-  Budget, 
+import {
+  Account,
+  Transaction,
+  Budget,
   FinancialSummary,
   TransactionFormData,
   AccountFormData,
-  BudgetFormData
+  BudgetFormData,
+  FinancialGoal,
+  GoalContribution,
+  GoalAlert,
+  GoalMilestone,
+  GoalFormData,
+  GoalAnalytics
 } from '@/types'
 
 // SWR fetcher functions
@@ -17,6 +23,9 @@ const accountsFetcher = () => apiClient.getAccounts()
 const transactionsFetcher = () => apiClient.getTransactions()
 const budgetsFetcher = () => apiClient.getBudgets()
 const summaryFetcher = () => apiClient.getFinancialSummary()
+const goalsFetcher = () => apiClient.getFinancialGoals()
+const goalAlertsFetcher = () => apiClient.getGoalAlerts()
+const goalAnalyticsFetcher = () => apiClient.getGoalAnalytics()
 
 export function useAccounts() {
   const { data, error, mutate } = useSWR<Account[]>('/accounts', accountsFetcher)
@@ -128,6 +137,104 @@ export function useFinancialSummary() {
     loading: !error && !data,
     error,
     mutate,
+  }
+}
+
+// Financial Goals Hooks
+export function useFinancialGoals() {
+  const { data, error, mutate } = useSWR<FinancialGoal[]>('/financial-goals', goalsFetcher)
+
+  const createGoal = async (goalData: GoalFormData) => {
+    const newGoal = await apiClient.createFinancialGoal(goalData)
+    mutate()
+    return newGoal
+  }
+
+  const updateGoal = async (id: number, goalData: Partial<GoalFormData>) => {
+    const updatedGoal = await apiClient.updateFinancialGoal(id, goalData)
+    mutate()
+    return updatedGoal
+  }
+
+  const deleteGoal = async (id: number) => {
+    await apiClient.deleteFinancialGoal(id)
+    mutate()
+  }
+
+  const addContribution = async (goalId: number, amount: number, description?: string) => {
+    const contribution = await apiClient.addGoalContribution(goalId, amount, description)
+    mutate() // Refresh goals to update current_amount
+    return contribution
+  }
+
+  return {
+    goals: data || [],
+    loading: !error && !data,
+    error,
+    createGoal,
+    updateGoal,
+    deleteGoal,
+    addContribution,
+    refresh: mutate
+  }
+}
+
+export function useGoalContributions(goalId: number) {
+  const { data, error, mutate } = useSWR<GoalContribution[]>(
+    goalId ? `/goal-contributions/${goalId}` : null,
+    () => apiClient.getGoalContributions(goalId)
+  )
+
+  return {
+    contributions: data || [],
+    loading: !error && !data,
+    error,
+    refresh: mutate
+  }
+}
+
+export function useGoalAlerts() {
+  const { data, error, mutate } = useSWR<GoalAlert[]>('/goal-alerts', goalAlertsFetcher)
+
+  const markAsRead = async (alertId: number) => {
+    await apiClient.markAlertAsRead(alertId)
+    mutate()
+  }
+
+  const unreadCount = data ? data.filter(alert => !alert.is_read).length : 0
+
+  return {
+    alerts: data || [],
+    unreadCount,
+    loading: !error && !data,
+    error,
+    markAsRead,
+    refresh: mutate
+  }
+}
+
+export function useGoalMilestones(goalId: number) {
+  const { data, error, mutate } = useSWR<GoalMilestone[]>(
+    goalId ? `/goal-milestones/${goalId}` : null,
+    () => apiClient.getGoalMilestones(goalId)
+  )
+
+  return {
+    milestones: data || [],
+    loading: !error && !data,
+    error,
+    refresh: mutate
+  }
+}
+
+export function useGoalAnalytics() {
+  const { data, error, mutate } = useSWR<GoalAnalytics>('/goal-analytics', goalAnalyticsFetcher)
+
+  return {
+    analytics: data,
+    loading: !error && !data,
+    error,
+    refresh: mutate
   }
 }
 

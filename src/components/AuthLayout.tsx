@@ -6,18 +6,19 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { useRequireAuth } from '@/hooks/useAuth'
 import { usePWAContext } from '@/components/PWAProvider'
-import { 
-  LayoutDashboard, 
-  CreditCard, 
-  PiggyBank, 
-  Camera, 
-  FileText, 
-  Settings, 
+import {
+  LayoutDashboard,
+  CreditCard,
+  PiggyBank,
+  Camera,
+  FileText,
+  Settings,
   LogOut,
   Menu,
   X,
   Bell,
-  Download
+  Download,
+  Target
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -38,6 +39,7 @@ export default function AuthLayout({ children, title }: AuthLayoutProps) {
     { name: 'Transações', href: '/transactions', icon: CreditCard },
     { name: 'Contas', href: '/accounts', icon: PiggyBank },
     { name: 'Orçamentos', href: '/budgets', icon: PiggyBank },
+    { name: 'Metas', href: '/goals', icon: Target },
     { name: 'OCR Upload', href: '/ocr', icon: Camera },
     { name: 'Análise PDF', href: '/pdf-analysis', icon: FileText },
   ]
