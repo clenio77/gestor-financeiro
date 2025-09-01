@@ -5,6 +5,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { Toaster } from "@/components/ui/toaster";
 import { PWAProvider } from "@/components/PWAProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PWAManager } from "@/components/PWAManager";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -110,8 +111,10 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <PWAProvider>
-              {children}
-              <Toaster />
+              <PWAManager>
+                {children}
+                <Toaster />
+              </PWAManager>
             </PWAProvider>
           </AuthProvider>
         </ThemeProvider>
