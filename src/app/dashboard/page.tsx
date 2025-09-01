@@ -15,6 +15,7 @@ import {
 import Link from 'next/link'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { BankingDashboard } from '@/components/BankingDashboard'
+import { ReportsDashboard } from '@/components/ReportsDashboard'
 
 export default function DashboardPage() {
   const { summary, loading, error } = useFinancialSummary()
@@ -259,6 +260,11 @@ export default function DashboardPage() {
         {/* Banking Integration */}
         <div className="mt-8">
           <BankingDashboard />
+        </div>
+
+        {/* Reports and Analytics */}
+        <div className="mt-8">
+          <ReportsDashboard />
         </div>
       </div>
     </AuthLayout>
