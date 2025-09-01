@@ -16,6 +16,7 @@ import Link from 'next/link'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { BankingDashboard } from '@/components/BankingDashboard'
 import { ReportsDashboard } from '@/components/ReportsDashboard'
+import { AIDashboard } from '@/components/AIDashboard'
 
 export default function DashboardPage() {
   const { summary, loading, error } = useFinancialSummary()
@@ -265,6 +266,14 @@ export default function DashboardPage() {
         {/* Reports and Analytics */}
         <div className="mt-8">
           <ReportsDashboard />
+        </div>
+
+        {/* AI Dashboard */}
+        <div className="mt-8">
+          <AIDashboard
+            transactions={summary?.recent_transactions || []}
+            goals={[]}
+          />
         </div>
       </div>
     </AuthLayout>
