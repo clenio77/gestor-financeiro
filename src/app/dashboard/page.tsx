@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import { BankingDashboard } from '@/components/BankingDashboard'
 
 export default function DashboardPage() {
   const { summary, loading, error } = useFinancialSummary()
@@ -254,6 +255,11 @@ export default function DashboardPage() {
             </div>
           </div>
         )}
+
+        {/* Banking Integration */}
+        <div className="mt-8">
+          <BankingDashboard />
+        </div>
       </div>
     </AuthLayout>
   )
